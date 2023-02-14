@@ -1,5 +1,7 @@
 [requires]
 fmt/9.1.0
+# grpc
+#grpc/1.43.2
 
 [generators]
 cmake
