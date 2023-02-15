@@ -84,6 +84,9 @@ macro(setup_build_environment)
     ## Setup directories
     setup_directories()
 
+    ## Prepare code generator
+    setup_codegen()
+
     ## Setup conan
     setup_conan()
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
@@ -151,7 +154,6 @@ macro(setup_targets)
 
     ## Library in one
     add_library(proj_lib STATIC ${GV_proj_src})
-    set_target_properties(proj_lib PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${GV_dir_gen_lib}")
     add_dependencies(proj_lib GT_dir_gen_lib)
 
     ## Main executable
