@@ -129,3 +129,36 @@ macro(add_proto_library TARGET)
     target_include_directories(${TARGET} PUBLIC ${GV_dir_gen_grpc_cpp})
     target_link_libraries(${TARGET} protobuf::protobuf)
 endmacro()
+
+macro(add_grpc_library TARGET)
+    cmake_parse_arguments(add_grpc_library "" "" "" "${ARGN}")
+
+    set(protobuf_generate_GENERATE_EXTENSIONS .pb.h .pb.cc .grpc.pb.h .grpc.pb.cc)
+
+    foreach(_proto ${add_grpc_library_UNPARSED_ARGUMENTS})
+        get_filename_component(_abs_file ${_proto} ABSOLUTE)
+        get_filename_component(_abs_dir ${_abs_file} DIRECTORY)
+        get_filename_component(_basename ${_proto} NAME_WLE)
+        file(RELATIVE_PATH _rel_dir ${CMAKE_SOURCE_DIR} ${_abs_dir})
+        set(_generated_srcs)
+        foreach(_ext ${protobuf_generate_GENERATE_EXTENSIONS})
+            list(APPEND _generated_srcs "${GT_dir_gen_grpc_cpp}/${_basename}${_ext}")
+        endforeach()
+
+        add_custom_command(
+            OUTPUT ${_generated_srcs}
+            COMMAND ${Protobuf_PROTOC_EXECUTABLE}
+            ARGS --grpc_out "${GV_dir_gen_grpc_cpp}"
+                --cpp_out ${GV_dir_gen_grpc_cpp}
+                --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN_PROGRAM}
+                -I ${_abs_dir} ${_abs_file}
+            DEPENDS ${_abs_file} GT_dir_gen_grpc_cpp
+            COMMENT "Running cpp grpc compiler on ${_proto}"
+            VERBATIM
+        )
+    endforeach()
+
+    add_library(${TARGET} ${_generated_srcs})
+    target_include_directories(${TARGET} PUBLIC ${GV_dir_gen_grpc_cpp})
+    target_link_libraries(${TARGET} grpc::grpc)
+endmacro()

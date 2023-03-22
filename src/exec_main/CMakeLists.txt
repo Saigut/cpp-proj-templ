@@ -5,6 +5,6 @@ set(V_dep_libs ${CONAN_LIBS})
 target_link_libraries(${V_program_name}
     proj_lib
     fmt::fmt
-    ${V_dep_libs})
+    grpc::grpc)
 target_link_libraries(${V_program_name}
     ${PLATFORM_LINK_LIB})

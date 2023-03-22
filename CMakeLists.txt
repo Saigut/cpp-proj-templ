@@ -90,6 +90,11 @@ macro(setup_dependency)
     list(PREPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
     find_package(fmt REQUIRED)
+    find_package(gRPC REQUIRED)
+    message("fmt_LIBRARIES: ${fmt_LIBRARIES}")
+    message("gRPC_LIBRARIES: ${gRPC_LIBRARIES}")
+    message("GRPC_CPP_PLUGIN_PROGRAM: ${GRPC_CPP_PLUGIN_PROGRAM}")
+    message("Protobuf_PROTOC_EXECUTABLE: ${Protobuf_PROTOC_EXECUTABLE}")
 endmacro()
 
 macro(setup_build_environment)
