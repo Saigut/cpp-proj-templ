@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.12)
 project(cpp-proj C CXX)
 
 # Include
-set(GV_other_dir_name z_other)
-set(GV_other_dir ${PROJECT_SOURCE_DIR}/${GV_other_dir_name})
-list(PREPEND CMAKE_MODULE_PATH "${GV_other_dir}/cmake")
+set(GV_extra_dir_name extra)
+set(GV_extra_dir ${PROJECT_SOURCE_DIR}/${GV_extra_dir_name})
+list(PREPEND CMAKE_MODULE_PATH "${GV_extra_dir}/cmake")
 include(common_var)
 include(helper)
 include(compiler)
@@ -24,7 +24,7 @@ macro(setup_conan)
         set(V_conan_gen_files
             "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
         set(V_conanfile
-            "${PROJECT_SOURCE_DIR}/${GV_other_dir_name}/conanfile.txt")
+            "${GV_extra_dir}/conanfile.txt")
         if (NOT EXISTS ${V_conanfile})
             message(WARNING "${V_conanfile} is not found!" )
         else()
@@ -73,14 +73,14 @@ macro(setup_conan)
 endmacro()
 
 macro(setup_directories)
-    set(GV_external_dir ${GV_other_dir_name}/external/${CMAKE_CXX_COMPILER_ID})
+    set(GV_external_dir ${GV_extra_dir_name}/external/${CMAKE_CXX_COMPILER_ID})
     message("External library path: ${GV_external_dir}")
     get_filename_component(GV_external_dir_a ${GV_external_dir} ABSOLUTE)
 
-    set(GV_dir_gen ${GV_other_dir}/gen)
+    set(GV_dir_gen ${GV_extra_dir}/gen)
     set(GV_dir_gen_lib ${GV_dir_gen}/lib)
     set(GV_dir_gen_grpc_cpp ${GV_dir_gen}/grpc_cpp)
-    dir_target(GT_dir_gen "${GV_dir_gen}" GV_other_dir)
+    dir_target(GT_dir_gen "${GV_dir_gen}" GV_extra_dir)
     dir_target(GT_dir_gen_lib "${GV_dir_gen_lib}" GT_dir_gen)
     dir_target(GT_dir_gen_grpc_cpp "${GV_dir_gen_grpc_cpp}" GT_dir_gen)
 endmacro()
@@ -135,7 +135,7 @@ endmacro()
 
 macro(setup_code_gen_targets)
 #    codegen_grpc(
-#        "${GV_other_dir}/code_to_gen/protos" "${GV_dir_gen_grpc_cpp}"
+#        "${GV_extra_dir}/code_to_gen/protos" "${GV_dir_gen_grpc_cpp}"
 #        GL_gen_grpc
 #        GT_dir_gen_grpc_cpp)
 endmacro()
