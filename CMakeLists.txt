@@ -142,13 +142,12 @@ macro(setup_targets)
     get_filename_component(GV_src_path "src" ABSOLUTE)
     file(GLOB GV_all_mod "${GV_src_path}/mod/*")
     file(GLOB GV_all_app "${GV_src_path}/app/*")
-    file(GLOB GV_all_exec "${GV_src_path}/exec/*")
 
     ## Code generator
     setup_code_gen_targets()
 
     ## Modules library
-    foreach(one_dir ${GV_all_mod} ${GV_all_app})
+    foreach(one_dir ${GV_all_mod})
         get_filename_component(tmp_name ${one_dir} NAME)
         file(GLOB GV_${tmp_name}_src "${one_dir}/*.cpp" "${one_dir}/*.c")
         file(GLOB tmp_sub_dirs "${one_dir}/*")
@@ -164,8 +163,8 @@ macro(setup_targets)
     ## Library in one
     add_library(proj_lib STATIC ${GV_proj_src})
 
-    ## Main executable
-    foreach(one_dir ${GV_all_exec})
+    ## Applications
+    foreach(one_dir ${GV_all_app})
         add_subdirectory(${one_dir})
     endforeach()
 endmacro()

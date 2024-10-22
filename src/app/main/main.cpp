@@ -1,5 +1,10 @@
-#include <app/hello_world/hello_world.hpp>
+#include <fmt/core.h>
 
+static int hello_world(int argc, char* argv[])
+{
+    fmt::print("[{}] Hello World!\n", argv[0]);
+    return 0;
+}
 
 static int program_main(int argc, char* argv[])
 {
