@@ -6,7 +6,7 @@
 #include <string>
 #include <functional>
 
-#include <mod_common/os_compat.hpp>
+#include "os_compat.hpp"
 #include "log.hpp"
 #include "expect.hpp"
 

@@ -1,12 +1,44 @@
 include_guard()
 
 include(common_var)
+include(CheckCXXSymbolExists)
+
+
+function(detect_arch)
+    check_symbol_exists(__i386__ "" ARCH_x86)
+    if(ARCH_x86)
+        set(TARGET_ARCH "x86" PARENT_SCOPE)
+        return()
+    endif()
+
+    check_symbol_exists(__x86_64__ "" ARCH_x86_64)
+    if(ARCH_x86_64)
+        set(TARGET_ARCH "x86_64" PARENT_SCOPE)
+        return()
+    endif()
+
+    check_symbol_exists(__arm__ "" ARCH_arm)
+    if(ARCH_arm)
+        set(TARGET_ARCH "arm" PARENT_SCOPE)
+        return()
+    endif()
+
+    check_symbol_exists(__aarch64__ "" ARCH_arm64)
+    if(ARCH_arm64)
+        set(TARGET_ARCH "arm64" PARENT_SCOPE)
+        return()
+    endif()
+endfunction()
 
 macro(compiler_set_compilation_options)
     # Compiler
     ## Firstly, chose generator, this is chosing build toochain. It's like only can chose generator on cmake command line.
 
     message("Number of logic cores of hardware: " ${GV_LCORES})
+
+    ## Which arch
+    detect_arch()
+    message("Target platform: ${TARGET_ARCH}")
 
     ## Which compiler
     set(V_conan_compiler "")
@@ -58,9 +90,11 @@ macro(compiler_set_compilation_options)
         if (GCC)
 #            set(CMAKE_C_FLAGS_RELEASE "-DNDEBUG")
 #            set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG")
-            set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=broadwell")
-            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=broadwell")
             add_definitions(-D_GNU_SOURCE)
+            if (ARCH_x86 OR ARCH_x86_64)
+                set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=broadwell")
+                set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=broadwell")
+            endif ()
         endif()
     endif ()
     if (GCC)

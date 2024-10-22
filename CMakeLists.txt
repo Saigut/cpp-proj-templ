@@ -77,12 +77,9 @@ macro(setup_directories)
     message("External library path: ${GV_external_dir}")
     get_filename_component(GV_external_dir_a ${GV_external_dir} ABSOLUTE)
 
-    set(GV_dir_gen ${GV_extra_dir}/gen)
+    set(GV_dir_gen ${CMAKE_BINARY_DIR}/gen)
     set(GV_dir_gen_lib ${GV_dir_gen}/lib)
     set(GV_dir_gen_grpc_cpp ${GV_dir_gen}/grpc_cpp)
-    dir_target(GT_dir_gen "${GV_dir_gen}" GV_extra_dir)
-    dir_target(GT_dir_gen_lib "${GV_dir_gen_lib}" GT_dir_gen)
-    dir_target(GT_dir_gen_grpc_cpp "${GV_dir_gen_grpc_cpp}" GT_dir_gen)
 endmacro()
 
 macro(setup_dependency)
@@ -143,9 +140,9 @@ endmacro()
 macro(setup_targets)
     set(GV_proj_src "")
     get_filename_component(GV_src_path "src" ABSOLUTE)
-    file(GLOB GV_all_mod "${GV_src_path}/mod_*")
-    file(GLOB GV_all_app "${GV_src_path}/app_*")
-    file(GLOB GV_all_exec "${GV_src_path}/exec_*")
+    file(GLOB GV_all_mod "${GV_src_path}/mod/*")
+    file(GLOB GV_all_app "${GV_src_path}/app/*")
+    file(GLOB GV_all_exec "${GV_src_path}/exec/*")
 
     ## Code generator
     setup_code_gen_targets()
@@ -166,7 +163,6 @@ macro(setup_targets)
 
     ## Library in one
     add_library(proj_lib STATIC ${GV_proj_src})
-    add_dependencies(proj_lib GT_dir_gen_lib)
 
     ## Main executable
     foreach(one_dir ${GV_all_exec})

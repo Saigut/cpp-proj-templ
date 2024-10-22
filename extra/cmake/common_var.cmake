@@ -1,5 +1,12 @@
 include_guard()
 
+# About arch
+unset(ARCH_x86 CACHE)
+unset(ARCH_x86_64 CACHE)
+unset(ARCH_arm CACHE)
+unset(ARCH_arm64 CACHE)
+set(TARGET_ARCH "unknown")
+
 # About compiler
 set(CLANG false)
 set(GCC false)
